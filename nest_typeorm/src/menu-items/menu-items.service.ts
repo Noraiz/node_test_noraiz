@@ -86,6 +86,16 @@ export class MenuItemsService {
     ]
   */
   async getMenuItems() {
-    throw new Error('TODO in task 3');
+    const nestedMenuItems = await this.menuItemRepository
+      .createQueryBuilder('menuItem')
+      .leftJoinAndMapMany(
+        'menuItem.children',
+        MenuItem,
+        'child',
+        'child.parentId = menuItem.id',
+      )
+      .getMany();
+    console.log(JSON.stringify(nestedMenuItems));
+    return nestedMenuItems;
   }
 }
